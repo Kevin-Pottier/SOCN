@@ -636,6 +636,8 @@ begin
 
    when MOV16 =>				-- MOV DPTR, #data16 (2 c51 cycles)
    --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	OpNb <= 3;
+	CMDDPTRISEL <= CMDDPTRIDATA16;
  
    when MOVC =>				-- MOVC A, @A+DPTR (2 c51 cycles)
    --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
