@@ -1,0 +1,9 @@
+*
+
+.param rimp=1
+
+.subckt RDac b0 b1 b2 b3 b4 b5 b6 b7 out
+
+ Rb00  0 A   '2*rimp'
+
+.ends RDac

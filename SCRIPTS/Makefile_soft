@@ -1,0 +1,71 @@
+SRC=
+OBJS=
+INC=Lib/reg.h Lib/compiler.h
+LOPT=
+
+#CC=./tools/sdcc-bin/bin/sdcc
+#AS=./tools/sdcc-bin/bin/asx8051
+#LINKER=./tools/sdcc-bin/bin/aslink
+
+# For the following to work update the PATH env variable with $PWD/tools/sdcc-bin/bin/
+
+#SDCC version 2.3.5 (Sep 24 2003)
+CC=sdcc
+AS=sdas8051
+LINKER=aslink
+
+$(SRC).ihx: $(SRC).c $(INC)
+	  @echo "############################################################"
+	  @echo "  Compiling $(SRC).c"
+	  @echo "############################################################"
+	  @echo ""	  
+
+	  @echo "--> SDCC COMPILATION"
+#	  $(CC) --peep-file peep.rules -I./Lib $(SRC).c
+	  $(CC) --no-xinit-opt -I./Lib $(SRC).c
+	  @echo "--> END OF SDCC COMPILATION"
+	  
+$(SRC).txt: $(SRC).ihx
+	  @echo "############################################################"
+	  @echo "Generating rom0/1_i.txt from $(SRC).txt"	  
+	  @echo "############################################################"
+	  @echo ""	  
+
+	  tools/intel2txt $(SRC).ihx > $(SRC).txt
+#	  cp $(SRC).txt rom0_i.txt
+	  perl tools/DistibuteRom.pl $(SRC).txt
+	   
+.PHONY all: $(SRC).ihx $(SRC).txt 
+
+asm:	  
+	  $(AS) -plosgff "$(SRC).asm"
+#	  $(LINKER) -nf "$(SRC)"
+	  -$(CC) $(LOPT) "$(SRC).rel"
+	  tools/intel2txt $(notdir $(SRC)).ihx > $(notdir $(SRC)).txt
+#	  cp $(SRC).txt rom0_i.txt
+	  perl tools/DistibuteRom.pl $(notdir $(SRC)).txt
+
+ref:
+	  cp $(PRODUCT_WORK)/cpu.log ../Reference/$(SRC).ref
+	  
+dif:	  
+	  @diff $(PRODUCT_WORK)/cpu.log ../Reference/$(SRC).ref > $(SRC).diff
+
+tkdif:	  
+	  tkdiff $(PRODUCT_WORK)/cpu.log ../Reference/$(SRC).ref
+
+clean: 
+	 -rm $(SRC).ihx
+	 -rm $(SRC).txt
+	 -rm $(SRC).lst 	 
+	 -rm $(SRC).map
+	 -rm $(SRC).rel
+	 -rm $(SRC).*.diff
+	 -rm $(SRC).sym
+	 -rm $(SRC).rst  
+	 -rm $(SRC).mem
+	 -rm $(SRC).cpu
+	 -rm $(SRC).log
+	 -rm $(SRC).lk	
+	 -rm $(SRC).lnk	
+

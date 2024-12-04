@@ -1,0 +1,34 @@
+* Simulations of a 5V transistor (nmosm)
+
+* Electrical model
+* Think to make a "setenv AMS_DIR /nfsi/people/lib/mtual/private/Cours_ESEO/TP/"
+
+* or setenv AMS_DIR /nfsi/people/dad/sgarnier/private/work/home/ES/trunk/source/TECH
+.lib /$AMS_DIR/eldo/c35/wc53.lib tm
+
+* Temperature
+.temp 25
+
+* Supply voltage
+.param VSUP=5.0 
+Vhi 	vcc 	vss 	dc 	VSUP
+Vlo 	vss 	0	dc	0
+
+* Netlist
+mn1 out in 0 0 modnm W=5u L=0.5u
+mp1 out in vcc vcc modpm W=10u L=0.5u
+
+* voltage source
+vin in 0 dc 0
+* Options.
+.include $AMS_DIR/eldo/c35/profile_cons.opt
+
+
+* Waveforms
+.probe v i
+
+.dc vin 0 vsup 0.001
+
+* End of netlist
+.end
+

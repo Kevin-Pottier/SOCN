@@ -1,0 +1,3 @@
+HitKit_3.70 Eng-182 REV_4
+* Owner: austriamicrosystems
+* HIT-Kit: Digital

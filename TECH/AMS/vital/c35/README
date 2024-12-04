@@ -1,0 +1,11 @@
+use the new c35_CORELIB*.v and the new UDP c35_UDP.v if using 2004 versions
+of tlf and synoposys .lib (.db) 
+
+05.01.05 bka  NEW CORELIB - no cond. arcs, impr. accuracy - new .v .vhd
+01.04.05 bka  setupcheck for DataEnable FlipFlop extended
+05.04.05 bka  reinserted all hold checks
+24.05.05 bka  inserted RNSN check - negedge RN SN check
+06.06.05 bka  negedge check improved
+22.06.06 bka  DLSG1 added
+25.08.06 bka  RN/SN verilog pessimism removed
+06.10.06 bka  LOGIC0/1 added

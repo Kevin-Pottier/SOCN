@@ -1,0 +1,151 @@
+*============================================================
+*  H35   P R O F I L E
+*  Owner: Austria Mikro Systeme
+*  HIT-Kit: Digital
+*  (c) Austria Mikro Systeme Intl. AG %G% gra (5463)
+*------------------------------------------------------------
+*  Format     :  ELDO
+*  Process      :  H35[A-B][3-4][B-C][0-3]
+*  By           :  gra (5463)
+*  Date         :  2005-12-01
+*------------------------------------------------------------
+* 
+* PLEASE NOTE: This file contains important parameters 
+*              to ensure SIMULATION ACCURACY and to 
+*              enable MONTE CARLO SIMULATION for device 
+*              models provided by AMS-AG.
+*
+*              Be sure to include this file for any 
+*              analog/mixed-signal circuit simulation.
+*
+* MONTE CARLO: Please note that in this implementation 
+*              only the simulation of PROCESS VARIATIONS
+*              is supported.
+*              The Monte-Carlo simulation of DEVICE MISMATCH is 
+*              only supported for the CADENCE Hit-Kit. 
+*
+*=============================================================
+.WIDTH OUT=80
+.CHECKSOA
+*
+* Define minimum process diffusions:
+.OPTIONS DEFAD=1.2100e-12 DEFAS=1.2100e-12
+.OPTIONS DEFPD=4.4000e-06 DEFPS=4.4000e-06
+.OPTIONS DEFNRD=0.0 DEFNRS=0.0 DEFW=0.0 DEFL=0.0 
+* 
+*   ACCURACY:   STANDARD OPTIONS     
+*         
+*  DC OPTIONS 
+*  Do not allow SOR, always use Newton method: 
+.OPTIONS NEWTON
+*  Set Newton accuracy options: 
+.OPTIONS VNTOL=1.e-6 ITOL=0.1e-4  RELTOL=1.0e-4
+*  TRANSIENT OPTIONS 
+*  Set LTE time-step control: 
+.OPTIONS QTRUNC 
+*  Set Gear integration with LTE time-step control: 
+.OPTIONS GEAR MAXORD=3 LVLTIM=2 TRTOL=7.0 QTRUNC
+*  Set Accuracy options for LTE time-step control 
+.OPTIONS NGTOL=1.0e-5 CHGTOL=1.0e-14 FLXTOL=10.e-12 RELTRUNC=1.e-3
+*  Either set EPS or all the parameters above 
+*  .OPTIONS EPS=1.0e-5 
+*   ACCURACY:   CONSERVATIVE OPTIONS     
+* 
+*  For critical circuits remove the STANDARD OPTIONS above 
+*  and uncomment all  the .OPTIONS - statements below ! 
+*  The following setting try to guarantuee a very stable solution 
+*  together with high accuracy by selecting small time steps. 
+*        
+*  DC OPTIONS 
+*  Do not allow SOR, always use Newton method: 
+* .OPTIONS NEWTON
+*  Set Newton accuracy options: 
+* .OPTIONS VNTOL=1.e-6 ITOL=0.1e-4  RELTOL=1.0e-6
+*  TRANSIENT OPTIONS 
+*  Set LTE time-step control:
+* .OPTIONS QTRUNC 
+*  Choose most stable algorithm: 
+* .OPTIONS BE
+*  Decrease time-step directly: 
+* .OPTIONS TRTOL=1.0
+* .OPTIONS LVLTIM=2
+*  Allow more iterations for a time step 
+* .OPTIONS ITL4=50
+*  More restrictive bounds -> smaller time steps 
+* .OPTIONS NGTOL=1.0e-5 CHGTOL=1.0e-15 FLXTOL=1.e-12 RELTRUNC=1.e-5
+*  Either set EPS or all the parameters above 
+* .OPTIONS EPS=1.0e-7
+* L, W and NRx MUST be specified. See Netlist Format Docum.!
+*
+* Set status and partitioning reports but no model echo:
+* .OPTIONS STAT=3 SIMUDIV=10 NOMOD
+*
+* Define correlated process parameters for Monte-Carlo:
+.PARAM DELTGOX=0 LOT/UNIFORM=0.500e-09  
++ DELVTON=0 LOT/UNIFORM=0.105e+00     DELVTOP=0 LOT/UNIFORM=0.100e+00  
++ DELUON =0 LOT/UNIFORM=16.50e+00     DELUOP =0 LOT/UNIFORM=13.50e+00  
++ DELL   =0 LOT/UNIFORM=0.050e-06     DELW   =0 LOT/UNIFORM=0.075e-06  
++ DELTGOXT=0 LOT/UNIFORM=0.500e-09  
++ DELVTONT=0 LOT/UNIFORM=0.100e+00     DELVTOPT=0 LOT/UNIFORM=0.150e+00  
++ DELUONT=0 LOT/UNIFORM=19.20e+00     DELUOPT=0 LOT/UNIFORM=8.30e+00  
++ DELLT  =0 LOT/UNIFORM=0.050e-06     DELWT  =0 LOT/UNIFORM=0.075e-06  
++ DELTGOXM=0 LOT/UNIFORM=0.500e-09  
++ DELVTONM=0 LOT/UNIFORM=0.100e+00     DELVTOPM=0 LOT/UNIFORM=0.150e+00  
++ DELUONM=0 LOT/UNIFORM=63.60e+00     DELUOPM=0 LOT/UNIFORM=17.20e+00  
++ DELLM  =0 LOT/UNIFORM=0.050e-06     DELWM  =0 LOT/UNIFORM=0.075e-06  
++ DELTGOXTLV=0 LOT/UNIFORM=0.500e-09  
++ DELVTONTLV=0 LOT/UNIFORM=0.080e+00     DELVTOPTLV=0 LOT/UNIFORM=0.080e+00  
++ DELUONTLV=0 LOT/UNIFORM=19.50e+00     DELUOPTLV=0 LOT/UNIFORM=13.00e+00  
++ DELLTLV=0 LOT/UNIFORM=0.050e-06     DELWTLV=0 LOT/UNIFORM=0.150e-06  
++ DELTGOXMLV=0 LOT/UNIFORM=0.500e-09  
++ DELVTONMLV=0 LOT/UNIFORM=0.100e+00     DELVTOPMLV=0 LOT/UNIFORM=0.150e+00  
++ DELUONMLV=0 LOT/UNIFORM=67.00e+00     DELUOPMLV=0 LOT/UNIFORM=15.00e+00  
++ DELLMLV=0 LOT/UNIFORM=0.065e-06     DELWMLV=0 LOT/UNIFORM=0.150e-06  
++ DELTGOXH=0  
++ DELVTONH=0     DELVTOPH=0  
++ DELUONH=0     DELUOPH=0  
++ DELLH  =0     DELWH  =0  
++ DELRDIFFN=0 LOT/UNIFORM=10.0e+00   DELRDIFFP=0 LOT/UNIFORM=25.00e+00  
++ RATIORWELL=1 LOT/UNIFORM=0.1e+00  
++ DELRPOLYN=0 LOT/UNIFORM=5.00e+00   DELRPOLYP=0  
++ DELWDPOLY2=0 LOT/UNIFORM=0.030e-06  
++ DELRPOLY2=0 LOT/UNIFORM=10.00e+00   DELRPOLYH=0 LOT/UNIFORM=200.0e+00  
++ CGSDON =0.120e-09 LOT/UNIFORM=0.015e-09   
++ CGBON  =0.110e-09 LOT/UNIFORM=0.010e-09  
++ CGSONT =0   CGDONT =0   
++ CGBONT =0  
++ CGSONIT=0   CGDONIT=0   
++ CGBONIT=0  
++ CGSDONM=0.108e-09 LOT/UNIFORM=0.013e-09   CGBONM =0.110e-09 LOT/UNIFORM=0.010e-09  
++ CGSONM50=0   CGDONM50=0   
++ CGBONM50=0  
++ CGSONIM50=0   CGDONIM50=0   
++ CGBONIM50=0  
++ CGSDONH=0   CGBONH =0  
++ CGSDOP =0.086e-09 LOT/UNIFORM=0.010e-09   
++ CGBOP  =0.110e-09 LOT/UNIFORM=0.010e-09  
++ CGSOPT =0   CGDOPT =0  
++ CGBOPT =0  
++ CGSDOPM=0.091e-09 LOT/UNIFORM=0.011e-09   CGBOPM =0.110e-09 LOT/UNIFORM=0.010e-09  
++ CGSOPM50=0   CGDOPM50=0   
++ CGBOPM50=0  
++ CGSDOPH=0   CGBOPH =0  
++ CGSDONLV=0.012e-09 LOT/UNIFORM=0.001e-09   CGBONLV=0.110e-09 LOT/UNIFORM=0.010e-09  
++ CGSDONMLV=0.010e-10 LOT/UNIFORM=0.002e-10   CGBONMLV=0.110e-09 LOT/UNIFORM=0.010e-09  
++ CGSDOPLV=0.056e-09 LOT/UNIFORM=0.006e-09   CGBOPLV=0.110e-09 LOT/UNIFORM=0.010e-09  
++ CGSDOPMLV=0.064e-09 LOT/UNIFORM=0.008e-09   CGBOPMLV=0.110e-09 LOT/UNIFORM=0.010e-09  
++ GUMMELBIC=0 LOT/UNIFORM=0.68e+00     RECOMBBIC=0 LOT/UNIFORM=0.31  
++ RATIOCJE=1 LOT/UNIFORM=0.17e+00   RATIOCJC=1 LOT/UNIFORM=0.2e+00  
++ RATIOCJS=1 LOT/UNIFORM=0.2e+00  
++ RATIORC2BN=1 LOT/UNIFORM=0.3e+00  RATIORE2BN=1 LOT/UNIFORM=0.3e+00  
++ EXTRAPAR=0   GUMMELPAR={log(RATIORWELL)+EXTRAPAR}
++ RECOMBPAR=0 LOT/UNIFORM=0.47e+00  
++ NORMZENER=0.5 LOT/UNIFORM=0.5
++ RATIOBV=1 LOT/UNIFORM=0.001  
++ RBETABI=0 LOT/UNIFORM=0.5e+00  
++ MIS_VERT10 =0 DEV/GAUSS=1
++ MBF_VERT10 =0 DEV/GAUSS=1
++ MISE_VERT10 =0 DEV/GAUSS=1
+*============================================================
+* Owner: austriamicrosystems
+* HIT-Kit: Digital

@@ -1,0 +1,97 @@
+* This file allows a more compact call of the Eldo libraries of the form:
+* .LIB /$AMS_DIR/eldo/c35/wc53.lib xx
+* where xx is one of the worst-cases (tm, wp, ws, wsh, wof, wos, wzf, wzs)
+* or mc for for statistical simulation (deterministic or stochastic).
+* Created by eldo-def.cmd version 1.28 for HIT-Kit 3.10.
+* (C) Austria Mikro Systeme Intl. AG 1999/01/07 gra (463)
+*
+* Case No. 1
+.lib tm
+.lib /$AMS_DIR/eldo/c35/cmos53tm.mod
+.lib /$AMS_DIR/eldo/c35/restm.mod
+.lib /$AMS_DIR/eldo/c35/captm.mod
+.lib /$AMS_DIR/eldo/c35/biptm.mod
+.endl tm
+
+* Case No. 2
+.lib wp
+.lib /$AMS_DIR/eldo/c35/cmos53wp.mod
+.lib /$AMS_DIR/eldo/c35/reswp.mod
+.lib /$AMS_DIR/eldo/c35/capwp.mod
+.lib /$AMS_DIR/eldo/c35/biphs.mod
+.endl wp
+
+* Case No. 3
+.lib ws
+.lib /$AMS_DIR/eldo/c35/cmos53ws.mod
+.lib /$AMS_DIR/eldo/c35/resws.mod
+.lib /$AMS_DIR/eldo/c35/capws.mod
+.lib /$AMS_DIR/eldo/c35/biphb.mod
+.endl ws
+
+* Case No. 4
+.lib wsh
+.lib /$AMS_DIR/eldo/c35/cmos53ws.mod
+.lib /$AMS_DIR/eldo/c35/resws.mod
+.lib /$AMS_DIR/eldo/c35/capws.mod
+.lib /$AMS_DIR/eldo/c35/biplb.mod
+.endl wsh
+
+* Case No. 5
+.lib wof
+.lib /$AMS_DIR/eldo/c35/cmos53wo.mod
+.lib /$AMS_DIR/eldo/c35/reswp.mod
+.lib /$AMS_DIR/eldo/c35/capwp.mod
+.lib /$AMS_DIR/eldo/c35/biphs.mod
+.endl wof
+
+* Case No. 6
+.lib wos
+.lib /$AMS_DIR/eldo/c35/cmos53wo.mod
+.lib /$AMS_DIR/eldo/c35/resws.mod
+.lib /$AMS_DIR/eldo/c35/capws.mod
+.lib /$AMS_DIR/eldo/c35/biphb.mod
+.endl wos
+
+* Case No. 7
+.lib wzf
+.lib /$AMS_DIR/eldo/c35/cmos53wz.mod
+.lib /$AMS_DIR/eldo/c35/reswp.mod
+.lib /$AMS_DIR/eldo/c35/capwp.mod
+.lib /$AMS_DIR/eldo/c35/biphs.mod
+.endl wzf
+
+* Case No. 8
+.lib wzs
+.lib /$AMS_DIR/eldo/c35/cmos53wz.mod
+.lib /$AMS_DIR/eldo/c35/resws.mod
+.lib /$AMS_DIR/eldo/c35/capws.mod
+.lib /$AMS_DIR/eldo/c35/biphb.mod
+.endl wzs
+
+* Case No. 9
+.lib wo
+.lib /$AMS_DIR/eldo/c35/cmos53wo.mod
+.lib /$AMS_DIR/eldo/c35/restm.mod
+.lib /$AMS_DIR/eldo/c35/captm.mod
+.lib /$AMS_DIR/eldo/c35/biplb.mod
+.endl wo
+
+* Case No. 10
+.lib wz
+.lib /$AMS_DIR/eldo/c35/cmos53wz.mod
+.lib /$AMS_DIR/eldo/c35/restm.mod
+.lib /$AMS_DIR/eldo/c35/captm.mod
+.lib /$AMS_DIR/eldo/c35/biplb.mod
+.endl wz
+
+* Case No. for statistical simulation
+.lib mc
+.lib /$AMS_DIR/eldo/c35/cmos53mc.mod
+.lib /$AMS_DIR/eldo/c35/resmc.mod
+.lib /$AMS_DIR/eldo/c35/capmc.mod
+.lib /$AMS_DIR/eldo/c35/bipmc.mod
+.endl mc
+
+* Owner: austriamicrosystems
+* HIT-Kit: Digital

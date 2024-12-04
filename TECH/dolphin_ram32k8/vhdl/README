@@ -1,0 +1,98 @@
+Dear customer,
+
+
+Please read the following notices concerning the memory VHDL model
+you have received.
+
+
+INSTALLATION:
+============
+
+Each VHDL model consists of 3 parts:
+ *  a common package file for all memories of the same type
+ *  a configuration specific VHDL code (VITAL95 compatible)
+    for simulation
+ *  one file with a component declaration
+
+In addition a black box description for Place & Route of the
+memory block is distributed.
+ *  <name>.fpr   tool independent ASCII format
+ *  <name>.lef   LEF file for Cadence Silicon Ensemble
+
+packages are available for single port RAM, dual port RAM and ROM.
+The package file have the naming convention "<name>_pkg.vhd"
+and VHDL code of the configuration specific model "<name>.vhd".
+
+Please compile the package first into a library named "work" and
+as a second step compile the configuration specific code.
+
+Note:
+-----
+Running the VHDL models of memories requires the following 
+VHDL libaries, which are normally installed within the VHDL
+simulator environment.
+                    IEEE.std_logic_1164
+                    IEEE.std_logic_arith
+                    IEEE.VITAL_TIMING
+
+
+TIMING MODELS:
+==============
+
+The VHDL code of a memory contains typical intrinsic delay and
+setup/hold data. The timing data do not contain input slope/
+output load delay calculations.
+
+Therefore a "tlf" for Cadence Delay Calulator or Cadence PEARL is
+added to this shipment. In the Delay Calculator exact timing data 
+in dependeny of input slope/output load and temp/volt./process derating
+can be calculted for your design, the delay data are stored in a SDF file.
+This SDF file can be annotated into the VHDL model you have received.
+
+The SDF file can be generated also with Synopsys DEsign Analyzer. 
+Pleae refer also to the README file for the Synopsys model.
+
+Please refer also to our design flow documentation.
+
+
+The timing data in the VHDL model and "tlf" file are vaild only for
+one nominal supply voltage 3.3V !
+3.3V models can be combined with the dig. Std. cell library "csd".
+
+
+ROM DATA INSERTION:
+===================
+
+ROM memory data are specified in a seperated file, located outside
+the simulation model.
+    
+The ROM data format is:
+
+                       00000000    -- first address
+                       00000001
+                       00000011
+                       00000111
+                       ....
+                       00001111
+                       00011110
+                       00111100   -- last address
+                       |      |
+                       |      |
+                      MSB    LSB
+
+
+In the VHDL model there is a "DATA_FILE" variable defined, where this
+romdata file is noticed to the VHDL model.
+
+
+In case of any questions, please contact the "Design Support Group",
+Attn. Peter Boesmueller.
+
+-------------------------------------------------------------------
+Peter Boesmueller                   phone:  ++43 3136 500-5339
+Design Support Group                fax:    ++43 3136 500-5755
+AUSTRIA MIKRO SYSTEME INT. AG       http://www.amsint.com
+Schloss Premstaetten                http://asic.amsint.com
+A-8141 Unterpremstaetten, AUSTRIA     
+              mailto:peter.boesmueller@amsint.com
+-------------------------------------------------------------------

@@ -1,0 +1,94 @@
+*
+
+** Library name: TP
+** Cell name: aop
+** View name: schematic
+.subckt aop en ibp1u vcc vm vout vp vss xen
+mppd0 vbp en vcc vcc pmosox3 L=500e-9 W=2e-6 M=1
+m7 net51 en vcc vcc pmosox3 L=500e-9 W=2e-6 M=1
+m5 vmaop vbp vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+m3 vss vm vmaop vmaop pmosox3 L=5e-6 W=12e-6 M=2
+m2 vss vp vpaop vpaop pmosox3 L=5e-6 W=12e-6 M=2
+m1 vpaop vbp vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+m0 vbp vbp vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+mp4 net51 net51 vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+mp5 vout net51 vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+mnpd0 ibp1u xen vss vss nmosox3 L=500e-9 W=2e-6 M=1
+m4 vbp ibp1u vss vss nmosox3 L=5e-6 W=10e-6 M=1
+mn4 vout vmaop net102 vss nmosox3 L=5e-6 W=20e-6 M=2
+mn3 net51 vpaop net102 vss nmosox3 L=5e-6 W=20e-6 M=2
+mn2 net102 ibp1u vss vss nmosox3 L=5e-6 W=10e-6 M=1
+mn1 ibp1u ibp1u vss vss nmosox3 L=5e-6 W=10e-6 M=1
+.ends aop
+** End of subcircuit definition.
+
+** Library name: TP
+** Cell name: bgp_resladder
+** View name: schematic
+
+.subckt Bod bod_det bod_en
+
+.connect en        bod_en
+*.connect BODOUT    bod_det
+
+x0 vcc vbp cpoly area=600e-12
+m2 xstart vref vss vss nwmva L=500e-9 W=30e-6 M=1
+m9 vbp xstart net200 vss nmosox3 L=500e-9 W=5e-6 M=1
+m8 net200 en vss vss nmosox3 L=500e-9 W=5e-6 M=1
+m0 xen en vss vss nmosox3 L=500e-9 W=2e-6 M=1
+xi6 en ibp1u vcc vbe2 vbp vp vss xen aop
+q2 vss vss vbe3 vert10
+q1 vss vss vbe2 vert10
+q0<7> vss vss vbe1 vert10
+q0<6> vss vss vbe1 vert10
+q0<5> vss vss vbe1 vert10
+q0<4> vss vss vbe1 vert10
+q0<3> vss vss vbe1 vert10
+q0<2> vss vss vbe1 vert10
+q0<1> vss vss vbe1 vert10
+q0<0> vss vss vbe1 vert10
+x3 vss vr rpolyh l=74e-6 w=1e-6
+x4 vr power rpolyh l=255e-6 w=1e-6 
+xr3 vss vref rpolyh l=1.206e-3 w=1e-6 
+xr2 vbe3 vref rpolyh l=371e-6 w=1e-6 
+xr1 vbe1 vp rpolyh l=35e-6 w=1e-6 
+m23 power xstart vcc vcc pmosox3 L=500e-9 W=20e-6 M=1
+m24 xstart en vcc vcc pmosox3 L=500e-9 W=4e-6 M=1
+m7 xstart xstart vcc vcc pmosox3 L=20e-6 W=2e-6 M=1
+m4 xen en vcc vcc pmosox3 L=500e-9 W=4e-6 M=1
+m5 vbp en vcc vcc pmosox3 L=500e-9 W=4e-6 M=1
+m3 ibp1u vbp vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+mp3 vref vbp vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+mp1 vp vbp vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+mp2 vbe2 vbp vcc vcc pmosox3 L=5e-6 W=12e-6 M=2
+
+.SUBCKT inv_core_1 IN OUT INH_GND INH_VDD 
+MP1 OUT IN INH_VDD INH_VDD   modpm L=500e-9 W=10e-6 AD=20e-12 AS=20e-12 PD=14e-6 
++PS=14e-6 NRD=125e-3 NRS=125e-3 M=1.0 
+MN1 OUT IN INH_GND INH_GND   modnm L=500e-9 W=4e-6 AD=3.4e-12 AS=3.4e-12 PD=5.7e-6 
++PS=5.7e-6 NRD=125e-3 NRS=125e-3 M=1.0 
+.ENDS inv_core_1 
+
+.SUBCKT nand2 A B OUT GND VDD 
+MP0 OUT B VDD VDD   modpm L=500e-9 W=10e-6 AD=20e-12 AS=20e-12 PD=14e-6 
++PS=14e-6 NRD=125e-3 NRS=125e-3 M=1.0 
+MP1 OUT A VDD VDD   modpm L=500e-9 W=10e-6 AD=20e-12 AS=20e-12 PD=14e-6 
++PS=14e-6 NRD=125e-3 NRS=125e-3 M=1.0 
+MN1 OUT B NET20 GND   modnm L=500e-9 W=4e-6 AD=3.4e-12 AS=3.4e-12 PD=5.7e-6 
++PS=5.7e-6 NRD=125e-3 NRS=125e-3 M=1.0 
+MN0 NET20 A GND GND   modnm L=500e-9 W=4e-6 AD=3.4e-12 AS=3.4e-12 PD=5.7e-6 
++PS=5.7e-6 NRD=125e-3 NRS=125e-3 M=1.0 
+.ENDS nand2 
+
+COMP0 VREF VR BODOUT VHI=VSUP VLO=0 VDEF=10m TCOM=100n
+
+XINV0 BODOUT BODOUT_I vss vcc inv_core_1
+XNAND2 BODOUT_I bod_en bod_det vss vcc nand2
+
+*FOLLOWS vcc:
+*COMP0 VREF VR BODOUT_IDEAL VHI=1 VLO=0 VDEF=10m TCOM=100n
+*YSW MULT vcc BODOUT_IDEAL BODOUT VSATP=5
+
+.ends Bod
+
+

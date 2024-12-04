@@ -1,0 +1,11 @@
+*	<LJMP addr16> at PCi=0000
+*	<MOV direct, #data> at PCi=001E
+*	<MOV R0, #data> at PCi=0021
+*	<CJNE R2, #data, rel> at PCi=0023
+*	<JNC rel> at PCi=0026
+*	<MOV A, R2> at PCi=0028
+*	<MOV DPTR, #data16> at PCi=0029
+*	<MOVC A, @A+DPTR> at PCi=002C
+*	<MOV direct, A> at PCi=002D
+*	<INC R2> at PCi=002F
+<SJMP rel> at PCi=0030

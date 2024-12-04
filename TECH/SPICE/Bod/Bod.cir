@@ -1,0 +1,9 @@
+*
+
+.subckt Bod bod_det bod_en
+
+*  Vbod_det     bod_det   0 0V
+
+  Ybod_vhdlams bod_vhdlams vdd vss bod_det bod_en
+
+.ends Bod

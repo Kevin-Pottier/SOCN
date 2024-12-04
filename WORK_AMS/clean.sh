@@ -1,0 +1,9 @@
+rm *.reuse 
+rm *.wlf
+rm *.chi
+rm *.wdb 
+rm *.swd
+rm *.conv
+rm *.log
+rm transcript*
+rm *.vstf

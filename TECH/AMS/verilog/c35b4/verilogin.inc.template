@@ -1,0 +1,5 @@
+-v AMS_DIR/verilog/c35b4/c35_CORELIB.v
+-v AMS_DIR/verilog/c35b4/c35_IOLIB_4M.v
+-v AMS_DIR/verilog/c35b4/c35_IOLIBV5_4M.v
+-v AMS_DIR/verilog/c35b4/FILLANT.v
+-v AMS_DIR/verilog/c35b4/c35_UDP.v

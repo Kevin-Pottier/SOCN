@@ -1,0 +1,245 @@
+   ###             FPR to LEF file converter 
+   ### (C) 1999 by Austria Mikro Systeme International AG 
+   ###   creation date: Thu Nov  8 13:56:51 MET 2007
+   ###               instance: dirom32768x8 
+
+
+      MACRO dirom32768x8 
+      CLASS BLOCK ; 
+      FOREIGN dirom32768x8 0 0 ; 
+      ORIGIN 0 0 ; 
+      SIZE 1400.450 BY 1285.400 ; 
+      SYMMETRY x y r90 ; 
+      SITE blockSite ; 
+      PIN AD[12] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 188.050 0.500 188.550 ;
+         END 
+      END AD[12] 
+      PIN DO[5] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 1006.200 0 1008.200 0.500 ;
+         END 
+      END DO[5] 
+      PIN AD[13] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 181.650 0.500 182.150 ;
+         END 
+      END AD[13] 
+      PIN DO[6] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 1132.300 0 1134.300 0.500 ;
+         END 
+      END DO[6] 
+      PIN AD[14] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 194.450 0.500 194.950 ;
+         END 
+      END AD[14] 
+      PIN DO[7] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 1258.400 0 1260.400 0.500 ;
+         END 
+      END DO[7] 
+      PIN NRST 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 230.550 0.500 231.050 ;
+         END 
+      END NRST 
+      PIN AD[0] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 239.200 0.500 239.700 ;
+         END 
+      END AD[0] 
+      PIN AD[1] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 245.400 0.500 245.900 ;
+         END 
+      END AD[1] 
+      PIN AD[2] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 251.600 0.500 252.100 ;
+         END 
+      END AD[2] 
+      PIN AD[3] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 330.250 0.500 330.750 ;
+         END 
+      END AD[3] 
+      PIN AD[4] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 336.450 0.500 336.950 ;
+         END 
+      END AD[4] 
+      PIN AD[5] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 257.800 0.500 258.300 ;
+         END 
+      END AD[5] 
+      PIN EN 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 204.750 0.500 205.250 ;
+         END 
+      END EN 
+      PIN AD[6] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 268.150 0.500 268.650 ;
+         END 
+      END AD[6] 
+      PIN AD[7] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 278.500 0.500 279.000 ;
+         END 
+      END AD[7] 
+      PIN AD[8] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 288.850 0.500 289.350 ;
+         END 
+      END AD[8] 
+      PIN CS 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 229.450 0.500 229.950 ;
+         END 
+      END CS 
+      PIN AD[9] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 299.200 0.500 299.700 ;
+         END 
+      END AD[9] 
+      PIN DO[0] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 375.700 0 377.700 0.500 ;
+         END 
+      END DO[0] 
+      PIN DO[1] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 501.800 0 503.800 0.500 ;
+         END 
+      END DO[1] 
+      PIN DO[2] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 627.900 0 629.900 0.500 ;
+         END 
+      END DO[2] 
+      PIN DO[3] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 754.000 0 756.000 0.500 ;
+         END 
+      END DO[3] 
+      PIN AD[10] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 309.550 0.500 310.050 ;
+         END 
+      END AD[10] 
+      PIN DO[4] 
+         DIRECTION OUTPUT TRISTATE ; 
+         PORT 
+         LAYER MET3 ;
+         RECT 880.100 0 882.100 0.500 ;
+         END 
+      END DO[4] 
+      PIN AD[11] 
+         DIRECTION INPUT ; 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 319.900 0.500 320.400 ;
+         END 
+      END AD[11] 
+      PIN gnd! 
+      DIRECTION INOUT ;
+      USE ground ;
+         PORT 
+         LAYER MET2 ;
+         RECT 0 85.800 0.500 169.800 ;
+         END 
+         PORT 
+         LAYER MET2 ;
+         RECT 0 1200.800 0.500 1284.800 ;
+         END 
+         PORT 
+         LAYER MET2 ;
+         RECT 1399.950 85.800 1400.450 169.800 ;
+         LAYER MET3 ;
+         RECT 1399.85 0.00 1315.85 0.50 ;
+         END 
+         PORT 
+         LAYER MET2 ;
+         RECT 1399.950 1200.800 1400.450 1284.800 ;
+         LAYER MET3 ;
+         RECT 1399.85 1285.40 1315.85 1284.90 ;
+         END 
+      END gnd! 
+      PIN vdd! 
+      DIRECTION INOUT ;
+      USE power ;
+         PORT 
+         LAYER MET2 ;
+         RECT 0 0.600 0.500 84.600 ;
+         LAYER MET2 ;
+         RECT 0.60 0.00 84.60 0.50 ;
+         END 
+         PORT 
+         LAYER MET2 ;
+         RECT 1399.950 0.600 1400.450 84.600 ;
+         END 
+      END vdd! 
+      OBS 
+         LAYER MET1 ; 
+         RECT 0 0 1400.450 1285.400 ; 
+         LAYER MET2 ; 
+         RECT 0 0 1400.450 1285.400 ; 
+         LAYER MET3 ; 
+         RECT 0 0 1400.450 1285.400 ; 
+      END 
+
+   END dirom32768x8
+
+   END LIBRARY
