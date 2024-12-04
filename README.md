@@ -65,5 +65,5 @@ The ASIC is built around an 8051 microcontroller core with specific peripherals,
 
 1. **Install the Project**
    ```bash
-   git clone <REPO>.git
+   git clone https://github.com/JegHeterKevin1/SOCN.git
    cd SOCN
