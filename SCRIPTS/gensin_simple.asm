@@ -229,7 +229,7 @@ _main:
 	mov	a,r7
 	mov	dptr,#_main_SINV_10000_2
 	movc	a,@a+dptr
-	mov	_DOUT0,a
+	mov	_DOUT0,_ACC
 ;	gensin_simple.c:14: for(i=0; i < sizeof(SINV)/sizeof(unsigned char); i++){
 	inc	r7
 	cjne	r7,#0x64,00128$

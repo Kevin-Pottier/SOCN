@@ -229,14 +229,14 @@
       000002 EF               [12]  229 	mov	a,r7
       000003 90r00r00         [24]  230 	mov	dptr,#_main_SINV_10000_2
       000006 93               [24]  231 	movc	a,@a+dptr
-      000007 F5 84            [12]  232 	mov	_DOUT0,a
+      000007 85 E0 84         [24]  232 	mov	_DOUT0,_ACC
                                     233 ;	gensin_simple.c:14: for(i=0; i < sizeof(SINV)/sizeof(unsigned char); i++){
-      000009 0F               [12]  234 	inc	r7
-      00000A BF 64 00         [24]  235 	cjne	r7,#0x64,00128$
-      00000D                        236 00128$:
-      00000D 40 F3            [24]  237 	jc	00105$
+      00000A 0F               [12]  234 	inc	r7
+      00000B BF 64 00         [24]  235 	cjne	r7,#0x64,00128$
+      00000E                        236 00128$:
+      00000E 40 F2            [24]  237 	jc	00105$
                                     238 ;	gensin_simple.c:19: }
-      00000F 80 EF            [24]  239 	sjmp	00109$
+      000010 80 EE            [24]  239 	sjmp	00109$
                                     240 	.area CSEG    (CODE)
                                     241 	.area CONST   (CODE)
       000000                        242 _main_SINV_10000_2:

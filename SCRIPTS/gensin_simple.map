@@ -67,7 +67,7 @@ CABS                                00000000    00000000 =           0. bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000013  s_GSINIT4                       
-C:   00000015  l_CSEG                          
+C:   00000016  l_CSEG                          
 C:   00000018  s_BIT_BANK                      
 C:   00000018  s_OSEG                          
 C:   00000018  s_REG_BANK_3                    
@@ -77,10 +77,10 @@ C:   00000019  s_GSINIT5
 C:   0000001C  s_CSEG                          
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
-C:   00000031  s_CONST                         
+C:   00000032  s_CONST                         
 C:   00000064  l_CONST                         
 C:   00000080  l_DSEG                          
-C:   00000095  s_XINIT                         
+C:   00000096  s_XINIT                         
 C:   000000F8  l_SSEG                          
 C:   00000100  l_IRAM                          
 
@@ -226,23 +226,23 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                0000001C    00000015 =          21. bytes (REL,CON,CODE)
+CSEG                                0000001C    00000016 =          22. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   0000001C  _main                              gensin_simple
-C:   0000002D  ___sdcc_external_startup           _startup
+C:   0000002E  ___sdcc_external_startup           _startup
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 13.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00000031    00000064 =         100. bytes (REL,CON,CODE)
+CONST                               00000032    00000064 =         100. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000031  _main_SINV_10000_2                 gensin_simple
+C:   00000032  _main_SINV_10000_2                 gensin_simple
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 14.
 
