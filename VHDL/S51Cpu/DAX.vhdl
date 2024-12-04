@@ -679,6 +679,9 @@ begin
 
   when MOV12 =>				-- MOV direct1, direct2 (2 c51 cycles)
   --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdDam <= DIRECT_COPY;
+   CMDDIRECTDINSEL <= DIRECTDINDIRECTDOUT;
    
   when OTHERS =>
   -- DEFAULT ASSIGNMENTS
