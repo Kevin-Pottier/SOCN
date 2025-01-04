@@ -474,6 +474,356 @@ begin
 
   case Opcode_bitvector is
 
+  when NOP =>					-- NOP (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   
+  when ADD =>					-- ADD A,direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   -----------------------------------------------------
+   -- A+=Rn (OP1=A, OP2=SfrDout(direct), S1 => OP1+OP2)
+   -----------------------------------------------------
+
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DIRDOUT;
+   CmdAluI <= ADD8;
+   CMDACCUISEL <= ACCUIS1;
+   
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+  when 	ADD1R0 | ADD1R1 | ADD1R2 | ADD1R3 |
+  	ADD1R4 | ADD1R5 | ADD1R6 | ADD1R7 =>	-- ADD A,Rn (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadRn;
+
+   -----------------------------------------------------
+   -- A+=Rn (OP1=A, OP2=Rn, S1 => OP1+OP2)   
+   -----------------------------------------------------
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DOUTPORTA;
+   CmdAluI <= ADD8;
+   CMDACCUISEL <= ACCUIS1;
+
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+      
+   
+  when ADD2 =>					-- ADD A,#data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   -----------------------------------------------------
+   -- A+=dir (OP1=A, OP2=direct, S1 => OP1+OP2)   
+   -----------------------------------------------------
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DATA1;
+   CmdAluI <= ADD8;
+   CMDACCUISEL <= ACCUIS1;
+
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+      
+   
+  when ADD3R0 | ADD3R1 =>			-- ADD A,@R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;
+
+   -----------------------------------------------------
+   -- A+=dir (OP1=A, OP2=@Rn, S1 => OP1+OP2)   
+   -----------------------------------------------------
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DOUTPORTB;
+   CmdAluI <= ADD8;
+   CMDACCUISEL <= ACCUIS1;
+
+
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+   
+  when ADDC =>					 -- ADDC A, direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  
+   OpNb <= 2;
+
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DIRDOUT;
+   CMDACCUISEL <= ACCUIS1;
+    
+   if(PswReg(CY) = '1') then
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=direct, S1 => OP1+OP2+1)   
+    -----------------------------------------------------
+
+    CmdAluI <= ADDINC8;
+   else
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=direct, S1 => OP1+OP2)   
+    -----------------------------------------------------
+
+    CmdAluI <= ADD8;
+   end if;
+
+   -- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+   
+  when ADDC1 =>					-- ADDC A, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;   
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DATA1;
+   CMDACCUISEL <= ACCUIS1;
+
+   if(PswReg(CY) = '1') then
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=direct, S1 => OP1+OP2)   
+    -----------------------------------------------------
+   
+    CmdAluI <= ADDINC8;
+   else
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=direct, S1 => OP1+OP2+1)   
+    -----------------------------------------------------
+
+    CmdAluI <= ADD8;
+   end if;
+
+   -- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+
+   
+  when ADDC2R0 | ADDC2R1 =>			-- ADDC A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DOUTPORTB;
+   CMDACCUISEL <= ACCUIS1;
+
+   if(PswReg(CY) = '1') then
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=@Ri, S1 => OP1+OP2)   
+    -----------------------------------------------------
+    CmdAluI <= ADDINC8;
+    
+   else
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=@Ri, S1 => OP1+OP2+1)   
+    -----------------------------------------------------
+    CmdAluI <= ADD8;
+   end if;
+
+   -- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+
+  when	ADDC3R0 | ADDC3R1 | ADDC3R2 | ADDC3R3 |
+	ADDC3R4 | ADDC3R5 | ADDC3R6 | ADDC3R7 =>-- ADDC A,R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadRn;
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DOUTPORTA;
+   CMDACCUISEL <= ACCUIS1;
+
+   if(PswReg(CY) = '1') then
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=Rn, S1 => OP1+OP2)   
+    -----------------------------------------------------
+    CmdAluI <= ADDINC8;
+   else
+    -----------------------------------------------------
+    -- A+=dir (OP1=A, OP2=Rn, S1 => OP1+OP2+1)   
+    -----------------------------------------------------
+    CmdAluI <= ADD8;
+   end if;   
+
+   -- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+
+  when ANL =>					-- ANL A, direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CMDACCUISEL <= ACCUIEQACCUANDDIRECTDOUT;
+   
+  when	ANL1R0 | ANL1R1 | ANL1R2 | ANL1R3 |
+   	ANL1R4 | ANL1R5 | ANL1R6 | ANL1R7 => 	-- ANL A, R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadRn;
+--   AccuI <= Accu and DoutPortA;      
+   CMDACCUISEL <= ACCUIEQACCUANDDOUTPORTA;
+  when ANL2 =>					-- ANL A, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CMDACCUISEL <= ACCUIEQACCUANDDATA1;
+   
+  when ANL3R0 | ANL3R1 =>			-- ANL A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;   
+   CMDACCUISEL <= ACCUIEQACCUANDDOUTPORTB;
+   
+  when ANL4 =>					-- ANL direct, A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+   CMDDIRECTDINSEL <= DIRECTDINEQDIRECTDOUTANDACCU;
+
+  when CLR =>					-- CLR A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDACCUISEL <= ACCUIEQNULL;
+   
+  when CLR1 =>					-- CLR bit (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= ClrBit;   
+   
+   -- Here bit addressable part of STACK
+   -- STACK range 20H to 2FH
+   -- BITS address range is 00H to 7FH
+   --    @byte        @bit
+   -- 0010|xxxx	  |   xxx
+   -- => @byte is "0010"&Data1(6 downto 3) and bit is at pos Data1(2 downto 0)
+      
+  when CLR2 =>					-- CLR C (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   PswClr(ClrPsw, CY);   
+
+  when CPL =>					-- CPL A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  
+   OpNb <= 1;
+   CMDACCUISEL <= ACCUIEQCPL;
+   
+  when CPL1 =>					-- CPL bit (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= CplBit;
+      
+  when CPL2 =>					-- CPL C (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   SetPswTo(ClrPsw, SetPsw, notcarry, CY);   
+   
+  when DA =>					-- DA A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   
+   CMDOP1SEL <= OP1ACCU;
+   CMDACCUISEL <= ACCUIS1;
+   CmdAluI <= ADD8;
+
+   DAT := AccuHGT9&AccuLGT9;
+   case DAT is
+    when "10" =>
+     CMDOP2SEL <= OP2SIXTY;
+    when "01" =>
+     CMDOP2SEL <= OP2SIX;
+    when "11" =>
+     CMDOP2SEL <= OP2SIXTYSIX;
+    when OTHERS =>
+     CMDOP2SEL <= OP2_NONE;
+   end case;
+
+   SetPswTo(ClrPsw, SetPsw, DAsetcarry, CY);
+   
+  when DEC => 					-- DEC A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+--   CMDOP3SEL <= OP3ACCU;
+   CmdAluI <= DEC8;
+   CMDACCUISEL <= ACCUIS1;
+   
+  when DEC1 =>					-- DEC direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+--   CMDOP3SEL <= OP3DIRECTDOUT;
+--   CmdAluI <= DEC8;
+--   CMDDIRECTDINSEL <= DIRECTDINS1;
+   CMDDIRECTDINSEL <= DIRECTDINDECDIRECTDOUT;
+
+  when 	DEC2R0 | DEC2R1 | DEC2R2 | DEC2R3 |
+  	DEC2R4 | DEC2R5 | DEC2R6 | DEC2R7 =>	-- DEC R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= DecRn;
+--   CMDOP3SEL <= OP3DOUTPORTA;
+--   CmdAluI <= DEC8;
+   CMDSTACKDINSEL <= STACKDINDECDOUTPORTA;
+
+  when DEC3R0 | DEC3R1 =>			-- DEC @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+--   CMDOP3SEL <= OP3DOUTPORTB;
+--   CmdAluI <= DEC8;
+   CMDSTACKDINSEL <= STACKDINDECDOUTPORTB;
+
+   CmdStack <= DecIndRi;
+
   when INC =>					-- INC A (1 c51 cycles)
 --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    OpNb <= 1;
@@ -489,7 +839,665 @@ begin
 --   CmdAluI <= INC8;
 --   CMDDIRECTDINSEL <= DIRECTDINS1;
    CMDDIRECTDINSEL <= DIRECTDININCDIRECTDOUT;
+
+  when	INC2R0 | INC2R1  | INC2R2  | INC2R3 |
+   	INC2R4 | INC2R5  | INC2R6  | INC2R7 =>	-- INC R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+
+--   CMDOP1SEL <= OP1DOUTPORTA;
+--   CmdAluI <= INC8;
+   CMDSTACKDINSEL <= STACKDININCDOUTPORTA;
+   
+   CmdStack <= DecRn;
+
+  when INC3R0 | INC3R1 =>			-- INC @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+
+--   CMDOP1SEL <= OP1DOUTPORTB;
+--   CmdAluI <= INC8;
+   CMDSTACKDINSEL <= STACKDINDECDOUTPORTB;
+
+   CmdStack <= DecIndRi;
+
+  when MOV =>					-- MOV A, direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CMDACCUISEL <= ACCUIEQDIRECTDOUT;
+
+  when	MOV1R0 | MOV1R1 | MOV1R2 | MOV1R3 |
+   	MOV1R4 | MOV1R5 | MOV1R6 | MOV1R7 =>	-- MOV A, R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadRn;
+   CMDACCUISEL <= ACCUIEQDOUTPORTA;
+
+   
+  when MOV2 =>					-- MOV A, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CMDACCUISEL <= ACCUIEQDATA1;   
+
+  when MOV3R0 | MOV3R1 =>			-- MOV A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+
+--   if OCDSfrAccess = '0' then
+    CmdStack <= ReadIndRi;
+    CMDACCUISEL <= ACCUIEQDOUTPORTB;
+--   else
+--    CmdStack <= ReadRi;
+--    CmdDam <= ReadSfrIndRi;
+--    CMDACCUISEL <= ACCUIEQDIRECTDOUT;
+--   end if;
+
+  when ESCAPE =>				-- ESCAPE
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+--   OCDTrap <= '1';
+
+  when MOV5 =>					-- MOV C, bit (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= ReadBit;
+   SetPswTo(ClrPsw, SetPsw, tmpdambit, CY);
+   
+  when MOV6 =>					-- MOV direct, A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;   
+   CmdDam <= DIRECT_STORE_PORTC;
+   CMDDIRECTDINSEL <= DIRECTDINACCU;
+
+  when	MOV7R0 | MOV7R1 | MOV7R2 | MOV7R3 |
+   	MOV7R4 | MOV7R5 | MOV7R6 | MOV7R7 =>	-- MOV R0, A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= StoreAccuToRn;      
+
+  when	MOV8R0 | MOV8R1 | MOV8R2 | MOV8R3 |
+   	MOV8R4 | MOV8R5 | MOV8R6 | MOV8R7 =>	-- MOV R0, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdStack <= StoreDataToRn;      
+
+  when MOV9R0 | MOV9R1 =>			-- MOV @R0, A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+--   if OCDSfrAccess = '0' then
+    CmdStack <= StoreAccuToIndRi;
+--   else
+--    CmdStack <= ReadRi;
+--    CmdDam <= WriteDirectDintoIndRi;
+--    CMDDIRECTDINSEL <= DIRECTDINACCU;
+--   end if;
+
+  when MOV10R0 | MOV10R1 =>			-- MOV @R0, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdStack <= StoreDataToIndRi;
+
+  when ORL =>					-- ORL A, direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+--   DirectAddressMux(DIRECT_LOAD_PORTA, CmdDam);
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CMDACCUISEL <= ACCUIEQACCUORDIRECTDOUT;
+
+  when	ORL1R0 | ORL1R1 | ORL1R2 | ORL1R3 |
+   	ORL1R4 | ORL1R5 | ORL1R6 | ORL1R7 =>	-- ORL A, R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadRn;
+   CMDACCUISEL <= ACCUIEQACCUORDOUTPORTA;
+   
+
+  when ORL2 =>					-- ORL A, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CMDACCUISEL <= ACCUIEQACCUORDATA1;
+
+  when ORL3R0 | ORL3R1 =>			-- ORL A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;
+   CMDACCUISEL <= ACCUIEQACCUORDOUTPORTB;
+
+  when ORL4 =>					-- ORL direct, A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+   CMDDIRECTDINSEL <= DIRECTDINEQDIRECTDOUTORACCU;
+   
+  when RL =>					-- RL A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDACCUISEL <= ACCUIRL;
+
+  when RLC =>					-- RLC A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDACCUISEL <= ACCUIRLC;
+   SetPswTo(ClrPsw, SetPsw, Accu(7), CY);         
+
+  when RR =>					-- RR A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDACCUISEL <= ACCUIRR;
+
+  when RRC =>					-- RRC A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDACCUISEL <= ACCUIRRC;
+   
+   SetPswTo(ClrPsw, SetPsw, Accu(0), CY);            
+   
+  when SETB =>					-- SETB bit (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= SetBit; 
+
+  when SETB1 =>					-- SETB C (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   PswSet(SetPsw, CY);      
+
+  when SUBB =>					-- SUBB A, direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   
+   -----------------------------------------------------
+   -- LOW8(A-B-1)=LOW8(A+CPL(B))
+   -----------------------------------------------------
+
+   CmdDam <= DIRECT_LOAD_PORTA;
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DIRDOUT;
+   CMDACCUISEL <= ACCUIS1;
+
+   if(PswReg(CY) = '1') then
+    CmdAluI <= SUB8;
+   else
+    CmdAluI <= SUBINC8;
+   end if;   
+
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+
+  when	SUBB1R0 | SUBB1R1 | SUBB1R2 | SUBB1R3 |
+   	SUBB1R4 | SUBB1R5 | SUBB1R6 | SUBB1R7 =>-- SUBB A, R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+
+   -----------------------------------------------------
+   -- LOW8(A-B-1)=LOW8(A+CPL(B))
+   -----------------------------------------------------
+   
+   CmdStack <= ReadRn;   
+   
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DOUTPORTA;
+   CMDACCUISEL <= ACCUIS1;    
+
+   if(PswReg(CY) = '1') then
+    CmdAluI <= SUB8;
+   else
+    CmdAluI <= SUBINC8;
+   end if;   
+
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+
+  when SUBB2 =>					-- SUBB A, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   -----------------------------------------------------
+   -- LOW8(A-B-1)=LOW8(A+CPL(B))
+   -----------------------------------------------------
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DATA1;
+   CMDACCUISEL <= ACCUIS1;        
+
+   if(PswReg(CY) = '1') then
+    CmdAluI <= SUB8;
+   else
+    CmdAluI <= SUBINC8;
+   end if;
+
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+   
+
+  when SUBB3R0 | SUBB3R1 =>			-- SUBB A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;
+
+   CMDOP1SEL <= OP1ACCU;
+   CMDOP2SEL <= OP2DOUTPORTB;
+   CMDACCUISEL <= ACCUIS1;        
+
+   if(PswReg(CY) = '1') then
+    CmdAluI <= SUB8;
+   else
+    CmdAluI <= SUBINC8;
+   end if;
+
+-- !!! RTL Compiler issue with the below !!!
+-- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
+
+-- Fix for RT compiler
+   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
+   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
+   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
+         
+
+  when SWAP =>					-- SWAP A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDACCUISEL <= ACCUISWAP;
+   
+  when XCH =>					-- XCH A, direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+   CMDACCUISEL <= ACCUIEQDIRECTDOUT;
+   CMDDIRECTDINSEL <= DIRECTDINACCU;
+
+  when	XCH1R0 | XCH1R1 | XCH1R2 | XCH1R3 |
+   	XCH1R4 | XCH1R5 | XCH1R6 | XCH1R7 =>	-- XCH A, R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= XchRn;
+   
+   CMDACCUISEL <= ACCUIEQDOUTPORTA;
+
+  when XCH2R0 | XCH2R1 =>			-- XCH A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= XchIndRi;   
+
+   CMDACCUISEL <= ACCUIEQDOUTPORTB;
+
+  when XCHDR0 | XCHDR1 =>			-- XCHD A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= XchdIndRi;   
+   CMDACCUISEL <= ACCUIXCH;
+      
+  when XRL =>					-- XRL A, direct (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CMDACCUISEL <= ACCUIEQACCUXORDIRECTDOUT;
+
+  when	XRL1R0 | XRL1R1 | XRL1R2 | XRL1R3 |
+   	XRL1R4 | XRL1R5 | XRL1R6 | XRL1R7 =>	-- XRL A, R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadRn;
+   CMDACCUISEL <= ACCUIEQACCUXORDOUTPORTA;
+
+  when XRL2 =>					-- XRL A, #data (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CMDACCUISEL <= ACCUIEQACCUXORDATA1;
+
+  when XRL3R0 | XRL3R1 =>			-- XRL A, @R0 (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;
+   CMDACCUISEL <= ACCUIEQACCUXORDOUTPORTB;
+
+  when XRL4 =>					-- XRL direct, A (1 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+   CMDDIRECTDINSEL <= DIRECTDINEQDIRECTDOUTXORACCU;
+
+  when	ACALL0 | ACALL1 | ACALL2 | ACALL3 |
+   	ACALL4 | ACALL5 | ACALL6 | ACALL7 =>	-- ACALL addr11 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   
+   --CMDOP1SEL <= OP1STACKPOINTER;
+   --CMDOP3SEL <= OP3STACKPOINTER;
+   --CMDOP2SEL <= OP2TWO;
+   --CmdAluI <= ADD_AND_INC8;
+   CmdStack <= Store16;
+   CMDSTACKPOINTERSEL <= CMDSTACKPOINTERPLUSTWO;
+   CmdPCiMUX <= PM_CALL;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '1';
+--   OCDCdtJmp	<= '0';
+--   -----------------------
+      
+  when	AJMP0 | AJMP1 | AJMP2 | AJMP3 |
+   	AJMP4 | AJMP5 | AJMP6 | AJMP7 => -- AJMP addr11 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdPCiMUX <= PM_CALL;        
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '1';
+--   OCDCdtJmp	<= '0';
+--   -----------------------
+
+  when ANL5 =>				-- ANL C, bit (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= ReadBit;
+      
+   SetPswTo(ClrPsw, SetPsw, anlCbit, CY);   
+       
+  when ANL6 =>				-- ANL C, /bit (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= ReadBit;
+   SetPswTo(ClrPsw, SetPsw, anlCnotbit, CY);   
+   
+  when ANL7 =>				-- ANL direct, #data (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+   CMDDIRECTDINSEL <= DIRECTDINEQDIRECTDOUTANDDATA2;
+   
+  when CJNE =>				-- CJNE A, direct, rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;   
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CMDOP5SEL <= OP5ACCU;
+   CMDOP6SEL <= OP6DIRECTDOUT;
+
+   SetPswTo(ClrPsw, SetPsw, LT, CY);      
+   
+   CmdPCiMUX <= PM_JMP;
+
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   -- PMCondition <= NotAccuEqDirectDOut;
+   PMCONDSEL <= PMC_NOTACCUEQDIRECTDOUT;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+  
+  when CJNE1 =>				-- CJNE A, #data, rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CMDOP5SEL <= OP5ACCU;
+   CMDOP6SEL <= OP6DATA1;
+   
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   -- PMCondition <= NotAccuEqData1;
+   PMCONDSEL <= PMC_NOTACCUEQDATA1;
+
+
+   SetPswTo(ClrPsw, SetPsw, LT, CY);      
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when	CJNE2R0 | CJNE2R1 | CJNE2R2 | CJNE2R3 |
+   	CJNE2R4 | CJNE2R5 | CJNE2R6 | CJNE2R7 =>-- CJNE R0, #data, rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdStack <= ReadRn;
+   CMDOP5SEL <= OP5DOUTPORTA;
+   CMDOP6SEL <= OP6DATA1;
+
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   -- PMCondition <= NotDoutPortAEqData1;
+   PMCONDSEL <= PMC_NOTDOUTPORTAEQDATA1;
+
+
+   SetPswTo(ClrPsw, SetPsw, LT, CY);      
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when CJNE3R0 | CJNE3R1 =>		-- CJNE @R0, #data, rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+
+   CmdStack <= ReadIndRi;
+   CMDOP5SEL <= OP5DOUTPORTB;
+   CMDOP6SEL <= OP6DATA1;
+   
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   -- PMCondition <= NotDoutPortBEqData1;
+   PMCONDSEL <= PMC_NOTDOUTPORTBEQDATA1;
+   
+   SetPswTo(ClrPsw, SetPsw, LT, CY);      
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+   
+  when DJNZ =>				-- DJNZ direct, rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   
+    CMDDIRECTDINSEL <= DIRECTDINDECDIRECTDOUT;
+    -- PMCondition <= DECDirectDOutNotNull;
+    PMCONDSEL <= PMC_DECDIRECTDOUTNOTNULL;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when	DJNZ1R0 | DJNZ1R1 | DJNZ1R2 | DJNZ1R3 |
+   	DJNZ1R4 | DJNZ1R5 | DJNZ1R6 | DJNZ1R7 =>-- DJNZ R0, rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdStack <= DecRn;
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA1;
+      
+    CMDSTACKDINSEL <= STACKDINDECDOUTPORTA;
+    -- PMCondition <= DECDoutPortANotNull;
+    PMCONDSEL <= PMC_DECDOUTPORTANOTNULL;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when INC4 =>					-- INC DPTR (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
  
+   CMDDPTRISEL <= CMDDPTRIINC;
+   
+  when JB =>					-- JB bit,rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   -------------------------------------------------------------------------------
+   -- Here bit addressable part of STACK
+   -- STACK range 20H to 2FH
+   -- BITS address range is 00H to 7FH
+   --    @byte        @bit
+   -- 0010|xxxx	  |   xxx
+   -- => @byte is "0010"&Data1(6 downto 3) and bit is at pos Data1(2 downto 0)
+   -------------------------------------------------------------------------------   
+
+   CmdDam <= ReadBit;
+   
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   -- PMCondition <= tmpdambit;
+   PMCONDSEL <= PMC_TMPDAMBIT;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+      
+  when JBC =>					-- JBC bit,rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   -------------------------------------------------------------------------------
+   -- Here bit addressable part of STACK
+   -- STACK range 20H to 2FH
+   -- BITS address range is 00H to 7FH
+   --    @byte        @bit
+   -- 0010|xxxx	  |   xxx
+   -- => @byte is "0010"&Data1(6 downto 3) and bit is at pos Data1(2 downto 0)
+   -------------------------------------------------------------------------------
+   
+   CmdDam <= ClrBit;
+  
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   -- PMCondition <= tmpdambit;
+   PMCONDSEL <= PMC_TMPDAMBIT;
+   
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when JC =>				-- JC rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA1;
+   -- PMCondition <= PswReg(CY);
+   PMCONDSEL <= PMC_PSWREGCY;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when JMP =>				-- JMP @A+DPTR (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdPCiMUX <= PM_JMPATAPLUSDPTR;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '1';
+--   OCDCdtJmp	<= '0';
+--   -----------------------
+
+  when JNB =>				-- JNB bit, rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   -------------------------------------------------------------------------------
+   -- Here bit addressable part of STACK
+   -- STACK range 20H to 2FH
+   -- BITS address range is 00H to 7FH
+   --    @byte        @bit
+   -- 0010|xxxx	  |   xxx
+   -- => @byte is "0010"&Data1(6 downto 3) and bit is at pos Data1(2 downto 0)
+   -------------------------------------------------------------------------------
+   
+   CmdDam <= ReadBit;
+
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA2;
+   -- PMCondition <= nottmpdambit;
+   PMCONDSEL <= PMC_NOTTMPDAMBIT;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when JNC =>				-- JNC rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA1;
+   -- PMCondition <= notcarry;
+   PMCONDSEL <= PMC_NOTCARRY;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when JNZ =>				-- JNZ rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA1;   
+   -- PMCondition <= notaccunull;
+   PMCONDSEL <= PMC_NOTACCUNULL;
+
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+
+  when JZ =>				-- JZ rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   CmdPCiMUX <= PM_JMP;
+   PMSelOffsetSrc <= PMSELOFFSETDATA1;
+   -- PMCondition <= accunull;
+   PMCONDSEL <= PMC_ACCUNULL;
+
+--   -----------------------
+--   -- OCD ----------------
+--	   OCDUnCdtJmp	<= '0';
+--   OCDCdtJmp	<= '1';
+--   -----------------------
+   
   when LCALL =>			-- LCALL addr16 (2 c51 cycles)
 --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    OpNb <= 3;
@@ -501,6 +1509,172 @@ begin
    CmdStack <= Store16;
    CMDSTACKPOINTERSEL <= CMDSTACKPOINTERPLUSTWO;
    CmdPCiMUX <= PM_LCALL;
+--
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '1';
+--   OCDCdtJmp	<= '0';
+--   -----------------------
+   
+  when LJMP =>				-- LJMP addr16 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdPCiMUX <= PM_LCALL;
+   
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '1';
+--   OCDCdtJmp	<= '0';
+--   -----------------------
+
+  when MOV11 =>				-- MOV bit, C (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= StoreCarryToBit; 
+   
+  when MOV12 =>				-- MOV direct1, direct2 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdDam <= DIRECT_COPY;
+   CMDDIRECTDINSEL <= DIRECTDINDIRECTDOUT;
+
+  when	MOV13R0 | MOV13R1 | MOV13R2 | MOV13R3 |
+   	MOV13R4 | MOV13R5 | MOV13R6 | MOV13R7 =>-- MOV direct, R0 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+
+   CmdStack <= ReadRn;
+   CMDDIRECTDINSEL <= DIRECTDINDOUTPORTA;
+   CmdDam <= DIRECT_STORE_PORTC;
+
+  when MOV14 =>				-- MOV direct, #data (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdDam <= DIRECT_STORE_PORTC;
+   CMDDIRECTDINSEL <= DIRECTDINDATA2;
+   
+  when MOV15R0 | MOV15R1 =>		-- MOV direct, @R0 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdStack <= ReadIndRi;
+   CMDDIRECTDINSEL <= DIRECTDINDOUTPORTB;
+   CmdDam <= DIRECT_STORE_PORTC;
+
+  when MOV16 =>				-- MOV DPTR, #data16 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CMDDPTRISEL <= CMDDPTRIDATA16;
+
+  when	MOV17R0 | MOV17R1 | MOV17R2 | MOV17R3 |
+   	MOV17R4 | MOV17R5 | MOV17R6 | MOV17R7 =>-- MOV R0, direct (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    OpNb <= 2;
+    CmdStack <= StoreDirectToRn;
+    CmdDam <= DIRECT_LOAD_PORTA;
+
+  when MOV18R0 | MOV18R1 =>		-- MOV @R0, direct (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CmdStack <= StoreDirectToIndirectRi;   
+
+  when MOVC =>				-- MOVC A, @A+DPTR (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+    
+   if State = '0' then
+    DisOpcodeFetch <= '1';
+    StateI <= '1';
+    CmdPCiMUX <= PM_JMPATAPLUSDPTR;
+--    OCDEOI <= '0';		-- Instruction will finish next clock cycle
+   else				-- Refill pipeline
+    StateI <= '0';     
+    CMDACCUISEL <= ACCUIEQMOVCDATA;
+--    OCDEOI <= '1';
+   end if;
+
+  when MOVC1 =>				-- MOVC A, @A+PC (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+
+   if State = '0' then
+    DisOpcodeFetch <= '1';
+    StateI <= '1';
+    CmdPCiMUX <= PM_JMPATAPLUSPC;
+   else
+    StateI <= '0';     
+    CMDACCUISEL <= ACCUIEQMOVCDATA;    
+   end if;
+
+  when MOVX =>				-- MOVX A, @DPTR (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDXRAMADDRESS <= CMDXRDPTR;
+   XramRdEn <= '1';
+   CMDACCUISEL <= ACCUIEQXRAMDOUT;
+
+  when MOVX1R0 | MOVX1R1  =>		-- MOVX A, @R0 (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;
+   CMDXRAMADDRESS <= CMDXRDOUTPORTA;
+   XramRdEn <= '1';
+   CMDACCUISEL <= ACCUIEQXRAMDOUT;
+
+  when MOVX2 =>				-- MOVX @DPTR, A (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CMDXRAMADDRESS <= CMDXRDPTR;
+   XRamWEI <= '1';
+   CMDXRAMDINSEL <= CMDXRAMDINEQACCU; 
+
+  when MOVX3R0 | MOVX3R1 =>		-- MOVX @R0, A (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 1;
+   CmdStack <= ReadIndRi;
+   
+   CMDXRAMADDRESS <= CMDXRDOUTPORTA;
+
+   XRamWEI <= '1';
+   CMDXRAMDINSEL <= CMDXRAMDINEQACCU;
+   
+  when ORL5 =>				-- ORL C, bit (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= ReadBit;   
+   SetPswTo(ClrPsw, SetPsw, orlCbit, CY);      
+
+  when ORL6 =>				-- ORL C, /bit (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= ReadBit;
+   SetPswTo(ClrPsw, SetPsw, orlCnotbit, CY);   
+ 
+  when ORL7 =>				-- ORL direct, #data (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 3;
+   CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
+   CMDDIRECTDINSEL <= DIRECTDINEQDIRECTDOUTORDATA2;
+
+  when POP =>				-- POP direct (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+   CmdDam <= DIRECT_STORE_PORTC;
+--   CMDOP3SEL <= OP3STACKPOINTER;
+--   CmdAluI <= DEC8;
+   CMDSTACKPOINTERSEL <= CMDSTACKPOINTERMINUSONE;
+   CmdStack <= Load8;
+   CMDDIRECTDINSEL <= DIRECTDINDOUTPORTA;
+
+  when PUSH =>				-- PUSH direct (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   OpNb <= 2;
+--   CMDOP1SEL <= OP1STACKPOINTER;
+--   CmdAluI <= INC8;
+   CMDSTACKPOINTERSEL <= CMDSTACKPOINTERPLUSONE;
+   CmdDam <= DIRECT_LOAD_PORTA;
+   CmdStack <= Store8;
       
   when RET | RETI =>			-- RET (2 c51 cycles)
 --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -514,154 +1688,42 @@ begin
    CmdPCiMUX <= PM_RET;
    CMDSTACKPOINTERSEL <= CMDSTACKPOINTERMINUSTWO;   
 
-  when MOV =>					-- MOV A, direct (1 c51 cycles)
-   --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 2;
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '1';
+--   OCDCdtJmp	<= '0';
+--   -----------------------
 
-   CmdDam <= DIRECT_LOAD_PORTA;
-   CMDACCUISEL <= ACCUIEQDIRECTDOUT;   
-
-  when JC =>				-- JC rel (2 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  when SJMP =>				-- SJMP rel (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    OpNb <= 2;
 
    CmdPCiMUX <= PM_JMP;
    PMSelOffsetSrc <= PMSELOFFSETDATA1;
-   -- PMCondition <= PswReg(CY);
-   PMCONDSEL <= PMC_PSWREGCY;   
+   -- PMCondition <= VCC;
+   PMCONDSEL <= PMC_VCC;
 
-  when ADD =>					-- ADD A,direct (1 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 2;
+--   -----------------------
+--   -- OCD ----------------
+--   OCDUnCdtJmp	<= '1';
+--   OCDCdtJmp	<= '0';
+--   -----------------------
 
-   -----------------------------------------------------
-   -- A+=Rn (OP1=A, OP2=SfrDout(direct), S1 => OP1+OP2)
-   -----------------------------------------------------
-
-   CmdDam <= DIRECT_LOAD_PORTA;
-   CMDOP1SEL <= OP1ACCU;
-   CMDOP2SEL <= OP2DIRDOUT;
-   CmdAluI <= ADD8;
-   CMDACCUISEL <= ACCUIS1;
-     
-  -- !!! RTL Compiler issue with the below !!!
-  -- AddPswDriver(ClrPsw, SetPsw, C1, AUXCARRY1, Ov1); -- PSW: CY, AC, OV driver         
-  
-  -- Fix for RT compiler
-   SetPswTo(ClrPsw, SetPsw, C1, CY);		-- drive Carry 
-   SetPswTo(ClrPsw, SetPsw, AUXCARRY1, AC);   	-- drive Aux Carry if 
-   SetPswTo(ClrPsw, SetPsw, Ov1, OV);		-- drive OV    				
-
-
-  when MOV2 =>					-- MOV A, #data (1 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 2;
-   CMDACCUISEL <= ACCUIEQDATA1;   
-
-  when ORL7 =>				-- ORL direct, #data (2 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  when XRL5 =>				-- XRL direct, #data (2 c51 cycles)
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    OpNb <= 3;
    CmdDam <= DIRECT_READ_MODIFY_WRITE_PORTAC;
-   CMDDIRECTDINSEL <= DIRECTDINEQDIRECTDOUTORDATA2;   
+   CMDDIRECTDINSEL <= DIRECTDINEQDIRECTDOUTXORDATA2;
 
-  when NOP =>					-- NOP (1 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 1;
-
-  when	INC2R0 | INC2R1  | INC2R2  | INC2R3 |
-         INC2R4 | INC2R5  | INC2R6  | INC2R7 =>	-- INC R0 (1 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 1;
-
---   CMDOP1SEL <= OP1DOUTPORTA;
---   CmdAluI <= INC8;
-   CMDSTACKDINSEL <= STACKDININCDOUTPORTA;
-
-   CmdStack <= DecRn;
-
-  when	MOV1R0 | MOV1R1 | MOV1R2 | MOV1R3 |
-         MOV1R4 | MOV1R5 | MOV1R6 | MOV1R7 =>	-- MOV A, R0 (1 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 1;
-   CmdStack <= ReadRn;
-   CMDACCUISEL <= ACCUIEQDOUTPORTA;
-
-  when MOV6 =>					-- MOV direct, A (1 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 2;   
-   CmdDam <= DIRECT_STORE_PORTC;
-   CMDDIRECTDINSEL <= DIRECTDINACCU;
-
-  when	MOV8R0 | MOV8R1 | MOV8R2 | MOV8R3 |
-         MOV8R4 | MOV8R5 | MOV8R6 | MOV8R7 =>	-- MOV R0, #data (1 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 2;
-   CmdStack <= StoreDataToRn;         
-
-  when	CJNE2R0 | CJNE2R1 | CJNE2R2 | CJNE2R3 |
-         CJNE2R4 | CJNE2R5 | CJNE2R6 | CJNE2R7 =>-- CJNE R0, #data, rel (2 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 3;
-   CmdStack <= ReadRn;
-   CMDOP5SEL <= OP5DOUTPORTA;
-   CMDOP6SEL <= OP6DATA1;
-   
-   CmdPCiMUX <= PM_JMP;
-   PMSelOffsetSrc <= PMSELOFFSETDATA2;
-   -- PMCondition <= NotDoutPortAEqData1;
-   PMCONDSEL <= PMC_NOTDOUTPORTAEQDATA1;
-   
-   
-   SetPswTo(ClrPsw, SetPsw, LT, CY);      
-
-   when JNC =>				-- JNC rel (2 c51 cycles)
-   --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    OpNb <= 2;
-    
-    CmdPCiMUX <= PM_JMP;
-    PMSelOffsetSrc <= PMSELOFFSETDATA1;
-    -- PMCondition <= notcarry;
-    PMCONDSEL <= PMC_NOTCARRY;
-
-   when LJMP =>				-- LJMP addr16 (2 c51 cycles)
-   --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    OpNb <= 3;
-    CmdPCiMUX <= PM_LCALL;
-
-   when MOV14 =>				-- MOV direct, #data (2 c51 cycles)
-   --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    OpNb <= 3;
-    CmdDam <= DIRECT_STORE_PORTC;
-    CMDDIRECTDINSEL <= DIRECTDINDATA2;         
-
-   when MOV16 =>				-- MOV DPTR, #data16 (2 c51 cycles)
-   --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	OpNb <= 3;
-	CMDDPTRISEL <= CMDDPTRIDATA16;
- 
-   when MOVC =>				-- MOVC A, @A+DPTR (2 c51 cycles)
-   --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    OpNb <= 1;
-        
-    if State = '0' then
-     DisOpcodeFetch <= '1';
-     StateI <= '1';
-     CmdPCiMUX <= PM_JMPATAPLUSDPTR;
- --    OCDEOI <= '0';		-- Instruction will finish next clock cycle
-    else				-- Refill pipeline
-     StateI <= '0';     
-     CMDACCUISEL <= ACCUIEQMOVCDATA;
- --    OCDEOI <= '1';
-    end if;               
-
-   when SJMP =>				-- SJMP rel (2 c51 cycles)
+  when DIV =>				 -- DIV AB (4 c51 cycles)
 --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    OpNb <= 2;
 
-    CmdPCiMUX <= PM_JMP;
-    PMSelOffsetSrc <= PMSELOFFSETDATA1;
-    -- PMCondition <= VCC;
-    PMCONDSEL <= PMC_VCC;
+   OpNb <= 1;
+   PswClr(ClrPsw, CY);
+   SetPswTo(ClrPsw, SetPsw, bisnull, OV);		-- SET OV if B=0 otherwise clears it
+   CmdAluI 	<= DIV8;
+   CMDACCUISEL	<= ACCUIS1DIV;
+   CMDBREGISEL	<= BREGIS2DIV;
 
   when MUL =>				-- MUL AB (4 c51 cycles)
 --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -676,15 +1738,6 @@ begin
    if (or_reduce(S2) = '1') then
     PswSet(SetPsw, OV);
    end if;
-
-  when MOV12 =>				-- MOV direct1, direct2 (2 c51 cycles)
-  --^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   OpNb <= 3;
-   CmdDam <= DIRECT_COPY;
-   CMDDIRECTDINSEL <= DIRECTDINDIRECTDOUT;
-   
-  when OTHERS =>
-  -- DEFAULT ASSIGNMENTS
   end case;
 
  end process;

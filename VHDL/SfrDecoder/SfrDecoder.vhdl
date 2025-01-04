@@ -159,14 +159,23 @@ begin
   when 	x"84" =>
 	Dout0EnI <= '1';
 	SfrDout <= SfrDout_Dout0;
+  when x"85" =>
+    TCTRLEnI <= '1';
+    -- #85
 
-	                                                        -- #85
+  when x"86" =>
+    CNT_HEnI <= '1';
+    SfrDout <= SfrDout_CNT_H;
+    -- #86
 
-                                                                -- #86
+  when x"87" =>
+    CNT_LEnI <= '1';
+    SfrDout <= SfrDout_CNT_L;
+    -- #87
 
-                                                                -- #87
-
-                                                                -- #8F
+  when x"8F" =>
+    SfrDout <= SfrDout_TSTAT;
+    -- #8F
 
   when 	x"FA" =>
 	IE1EnI <= '1';  
