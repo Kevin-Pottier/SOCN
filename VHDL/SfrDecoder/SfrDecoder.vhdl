@@ -177,6 +177,11 @@ begin
     SfrDout <= SfrDout_TSTAT;
     -- #8F
 
+  when x"F9" =>
+      IE0EnI <= '1';
+      SfrDout <= SfrDout_IE0;
+      -- #F9
+        
   when 	x"FA" =>
 	IE1EnI <= '1';  
 	SfrDout <= SfrDout_IE1;

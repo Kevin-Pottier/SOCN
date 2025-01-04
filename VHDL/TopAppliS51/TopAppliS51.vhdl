@@ -642,7 +642,7 @@ begin
 -- end process;
 
  ItEntriesV(15 downto 1) <= (others => '0');
- ItEntriesV(0)           <= '0';
+ ItEntriesV(0)           <= Time_out_IT;
  timer_auto_idle         <= '0';
 
  S51Timer_I : S51Timer
@@ -661,8 +661,8 @@ begin
   CNT_HWen              => '0',
   CNT_LWen              => '0',
 
-  Time_out_IT           => open,
-  timer_auto_idle       => open
+  Time_out_IT           => Time_out_IT,
+  timer_auto_idle       => timer_auto_idle
  );
 
  RstCtl_I : RstCtl

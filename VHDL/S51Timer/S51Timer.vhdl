@@ -120,6 +120,6 @@ Begin
     reload => reload
   );
   timer_auto_idle <= '0';
-  Time_out_IT <= '0';
+  Time_out_IT <= ROLLV;
 
 End rtl;

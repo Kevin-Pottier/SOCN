@@ -34,6 +34,8 @@ Begin
 
     Process (TIMERSM, start, stop, int_cnt, cnt) -- STATE_DECODER process
     Begin
+    TIMERSM_I <= TM_IDLE;
+    int_cnt_i <= int_cnt;
 
         Case TIMERSM Is
 
