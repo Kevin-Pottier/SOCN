@@ -1,74 +1,90 @@
 
 Library IEEE;
- use IEEE.std_logic_1164.all;
- use IEEE.numeric_std.all;
+Use IEEE.std_logic_1164.All;
+Use IEEE.numeric_std.All;
 Library LibPkg;
- use LibPkg.MyUtils.all;
+Use LibPkg.MyUtils.All;
 Library LibPkgS51Cpu;
- use LibPkgS51Cpu.PkgS51Cpu.all;
+Use LibPkgS51Cpu.PkgS51Cpu.All;
 Library LibS51Timer;
- use LibS51Timer.PkgS51Timer.all;
+Use LibS51Timer.PkgS51Timer.All;
 -- synopsys translate_off
-library std;
- use std.textio.all;
+Library std;
+Use std.textio.All;
 -- synopsys translate_on
 
-Entity S51TimerCore is
- Port(
-  RstB	        	: in    std_logic;
-  Ck            	: in    std_logic;
+Entity S51TimerCore Is
+    Port (
+        RstB : In STD_LOGIC;
+        Ck : In STD_LOGIC;
 
-  start			: in	std_logic;
-  stop			: in	std_logic;
-  cnt			: in	std_logic_vector(15 downto 0);
-  reload		: out	std_logic
- );
+        start : In STD_LOGIC;
+        stop : In STD_LOGIC;
+        cnt : In STD_LOGIC_VECTOR(15 Downto 0);
+        reload : Out STD_LOGIC
+    );
 End S51TimerCore;
 
-Architecture rtl of S51TimerCore is
- signal TIMERSM		: T_TIMERSM;
- signal TIMERSM_I	: T_TIMERSM;
- signal int_cnt		: std_logic_vector(15 downto 0);
- signal int_cnt_i       : std_logic_vector(15 downto 0);
-begin
+Architecture rtl Of S51TimerCore Is
+    Signal TIMERSM : T_TIMERSM;
+    Signal TIMERSM_I : T_TIMERSM;
+    Signal int_cnt : STD_LOGIC_VECTOR(15 Downto 0);
+    Signal int_cnt_i : STD_LOGIC_VECTOR(15 Downto 0);
+Begin
 
--- process (TIMERSM, start, stop, int_cnt, cnt) -- STATE_DECODER process
--- begin
---
---  case TIMERSM is
---
---   when TM_IDLE =>
---
---   when TM_DECR =>
---
----- dec example: next_x <= std_logic_vector(unsigned(current_x) - 1);
---
---    if x = "0000000000000000" then
---    end if;
---
---   when TM_RELOAD =>
---
---   when OTHERS =>
---
---  end case;
--- end process;
---
--- process(RstB, Ck) -- TIMERSM_R process
--- begin
---  if RstB = '0' then
---
---  elsif Ck'event and Ck = '1' then
---  end if;  
---
--- end process;
---
--- process(Ck) -- INT_CNT_R process
--- begin
---  if Ck'event and Ck = '1' then
---  end if;  
--- end process;
---
--- reload <= bool2_stdlogic(TIMERSM = TM_RELOAD);
+    Process (TIMERSM, start, stop, int_cnt, cnt) -- STATE_DECODER process
+    Begin
+
+        Case TIMERSM Is
+
+            When TM_IDLE =>
+                If start = '1' Then
+                    TIMERSM <= TM_DECR;
+                    int_cnt <= cnt;
+                End If;
+
+            When TM_DECR =>
+                If stop = '1' Then
+                    TIMERSM <= TM_IDLE;
+                Elsif int_cnt = "0000000000000000" Then
+                    TIMERSM <= TM_RELOAD;
+                Else
+                    int_cnt <= STD_LOGIC_VECTOR(unsigned(int_cnt) - 1);
+                End If;
+
+                -- dec example: next_x <= std_logic_vector(unsigned(current_x) - 1);
+                --    if x = "0000000000000000" then
+                --    end if;
+
+            When TM_RELOAD =>
+                TIMERSM <= TM_IDLE;
+
+            When Others =>
+                TIMERSM <= TM_IDLE;
+
+        End Case;
+    End Process;
+
+    Process (RstB, Ck) -- TIMERSM_R process
+    Begin
+        If RstB = '0' Then
+            TIMERSM <= TM_IDLE;
+            int_cnt <= (Others => '0');
+
+        Elsif Ck'event And Ck = '1' Then
+            TIMERSM <= TIMERSM_I;
+            int_cnt <= int_cnt_i;
+        End If;
+
+    End Process;
+
+    Process (Ck) -- INT_CNT_R process
+    Begin
+        If Ck'event And Ck = '1' Then
+            int_cnt_i <= int_cnt;
+        End If;
+    End Process;
+
+    reload <= bool2_stdlogic(TIMERSM = TM_RELOAD);
 
 End rtl;
-
