@@ -33,7 +33,7 @@ vss           vss 0 0
   **************************
   * CONV MODELS
   **************************  
-  .model a2d_std a2d mode=std_logic vth1=2.5 vth2=2.5
+  .model a2d_std a2d mode=std_logic vth1=1.5 vth2=1.5
 
  *.model d2a_std d2a mode=std_logic vhi=5      vlo=0      trise=1n tfall=1n
   .model d2a_std d2a mode=std_logic VLOREF=vss VHIREF=vdd trise=1n tfall=1n
