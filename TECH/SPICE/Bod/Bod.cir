@@ -1,9 +1,74 @@
-*
+** Library name: Superviseur_alimentation
+** Cell name: Amplificateur
+** View name: schematic
+.subckt Amplificateur ibias vout en en_b vdda vn vp vssa
+
+C1 vref vssa 20p
+
+mn3 ibias en_b vssa vssa modn L=500e-9 W=2e-6 AD=1.7e-12 AS=1.7e-12 PD=3.7e-6 PS=3.7e-6 NRD=250e-3 NRS=250e-3 M=1
+mn2 net5 en_b vssa vssa modn L=500e-9 W=2e-6 AD=1.7e-12 AS=1.7e-12 PD=3.7e-6 PS=3.7e-6 NRD=250e-3 NRS=250e-3 M=1
+mn1 net4 en_b vssa vssa modn L=500e-9 W=2e-6 AD=1.7e-12 AS=1.7e-12 PD=3.7e-6 PS=3.7e-6 NRD=250e-3 NRS=250e-3 M=1
+
+m4 vout net5 vssa vssa modn L=5e-6 W=19.3e-6 AD=16.405e-12 AS=16.405e-12 PD=21e-6 PS=21e-6 NRD=25.90674e-3 NRS=25.90674e-3 M=1
+m3 net5 net4 vssa vssa modn L=8e-6 W=1.25e-6 AD=1.0625e-12 AS=1.0625e-12 PD=2.95e-6 PS=2.95e-6 NRD=400e-3 NRS=400e-3 M=1
+m2 net4 net4 vssa vssa modn L=8e-6 W=1.25e-6 AD=1.0625e-12 AS=1.0625e-12 PD=2.95e-6 PS=2.95e-6 NRD=400e-3 NRS=400e-3 M=1
+m1 net2 ibias vssa vssa modn L=8e-6 W=2.5e-6 AD=2.125e-12 AS=2.125e-12 PD=4.2e-6 PS=4.2e-6 NRD=200e-3 NRS=200e-3 M=1
+m0 ibias ibias vssa vssa modn L=8e-6 W=2.5e-6 AD=2.125e-12 AS=2.125e-12 PD=4.2e-6 PS=4.2e-6 NRD=200e-3 NRS=200e-3 M=1
+
+mp2 net2 en vdda vdda modp L=500e-9 W=2e-6 AD=1.7e-12 AS=1.7e-12 PD=3.7e-6 PS=3.7e-6 NRD=250e-3 NRS=250e-3 M=1
+
+m9 net5 vp net3 vdda modp L=2e-6 W=35.2e-6 AD=29.92e-12 AS=29.92e-12 PD=36.9e-6 PS=36.9e-6 NRD=14.20455e-3 NRS=14.20455e-3 M=1
+m8 net4 vn net3 vdda modp L=2e-6 W=35.2e-6 AD=29.92e-12 AS=29.92e-12 PD=36.9e-6 PS=36.9e-6 NRD=14.20455e-3 NRS=14.20455e-3 M=1
+m7 vout net2 vdda vdda modp L=8e-6 W=58.2e-6 AD=49.47e-12 AS=49.47e-12 PD=59.9e-6 PS=59.9e-6 NRD=8.591065e-3 NRS=8.591065e-3 M=1
+m6 net3 net2 vdda vdda modp L=8e-6 W=7.25e-6 AD=6.1625e-12 AS=6.1625e-12 PD=8.95e-6 PS=8.95e-6 NRD=68.96552e-3 NRS=68.96552e-3 M=1
+m5 net2 net2 vdda vdda modp L=8e-6 W=7.25e-6 AD=6.1625e-12 AS=6.1625e-12 PD=8.95e-6 PS=8.95e-6 NRD=68.96552e-3 NRS=68.96552e-3 M=1
+
+xc0 net5 vout cpoly AREA=4.62e-9 PERI=272e-6 M=1
+
+.ends Amplificateur
+** End of subcircuit definition.
+
+** Library name: Superviseur_alimentation
+** Cell name: GenerateurCourantPAT
+** View name: schematic
+
+xi0 net5 net2 en en_b vdda net3 net1 vssa Amplificateur
+
+mp6 en_b en vdda vdda modp L=350e-9 W=10e-6 AD=11e-12 AS=11e-12 PD=12.2e-6 PS=12.2e-6 NRD=60e-3 NRS=60e-3 M=1
+mp5 net8 net8 net7 vdda modp L=30e-6 W=1e-6 AD=850e-15 AS=850e-15 PD=2.7e-6 PS=2.7e-6 NRD=500e-3 NRS=500e-3 M=1
+mp4 net7 net7 vdda vdda modp L=30e-6 W=1e-6 AD=850e-15 AS=850e-15 PD=2.7e-6 PS=2.7e-6 NRD=500e-3 NRS=500e-3 M=1
+mp3 net5 net2 vdda vdda modp L=8e-6 W=6.8e-6 AD=5.78e-12 AS=5.78e-12 PD=8.5e-6 PS=8.5e-6 NRD=73.52941e-3 NRS=73.52941e-3 M=1
+mp2 vref net2 vdda vdda modp L=8e-6 W=6.8e-6 AD=5.78e-12 AS=5.78e-12 PD=8.5e-6 PS=8.5e-6 NRD=73.52941e-3 NRS=73.52941e-3 M=1
+mp1 net3 net2 vdda vdda modp L=8e-6 W=6.8e-6 AD=5.78e-12 AS=5.78e-12 PD=8.5e-6 PS=8.5e-6 NRD=73.52941e-3 NRS=73.52941e-3 M=1
+mp0 net1 net2 vdda vdda modp L=8e-6 W=6.8e-6 AD=5.78e-12 AS=5.78e-12 PD=8.5e-6 PS=8.5e-6 NRD=73.52941e-3 NRS=73.52941e-3 M=1
+
+q2 vssa vssa net6 vssa vert10 m=1
+q0 vssa vssa net3 vssa vert10 m=1
+q1<7> vssa vssa net4 vssa vert10 m=1
+q1<6> vssa vssa net4 vssa vert10 m=1
+q1<5> vssa vssa net4 vssa vert10 m=1
+q1<4> vssa vssa net4 vssa vert10 m=1
+q1<3> vssa vssa net4 vssa vert10 m=1
+q1<2> vssa vssa net4 vssa vert10 m=1
+q1<1> vssa vssa net4 vssa vert10 m=1
+q1<0> vssa vssa net4 vssa vert10 m=1
+
+xr2 vref vssa rpolyh L=22.736e-3 W=10e-6 M=1
+xr1 vref net6 rpolyh L=4.93265e-3 W=10e-6 M=1
+xr0 net1 net4 rpolyh L=436.1e-6 W=10e-6 M=1
+
+mn5 net9 en vssa vssa modn L=350e-9 W=10e-6 AD=11e-12 AS=11e-12 PD=12.2e-6 PS=12.2e-6 NRD=60e-3 NRS=60e-3 M=1
+mn4 net10 en vssa vssa modn L=350e-9 W=10e-6 AD=11e-12 AS=11e-12 PD=12.2e-6 PS=12.2e-6 NRD=60e-3 NRS=60e-3 M=1
+mn3 vref en_b vssa vssa modn L=350e-9 W=10e-6 AD=11e-12 AS=11e-12 PD=12.2e-6 PS=12.2e-6 NRD=60e-3 NRS=60e-3 M=1
+mn2 en_b en vssa vssa modn L=350e-9 W=10e-6 AD=11e-12 AS=11e-12 PD=12.2e-6 PS=12.2e-6 NRD=60e-3 NRS=60e-3 M=1
+mn1 net8 vref net10 vssa modn L=350e-9 W=5e-6 AD=4.25e-12 AS=4.25e-12 PD=6.7e-6 PS=6.7e-6 NRD=100e-3 NRS=100e-3 M=1
+mn0 net2 net8 net9 vssa modn L=350e-9 W=5e-6 AD=4.25e-12 AS=4.25e-12 PD=6.7e-6 PS=6.7e-6 NRD=100e-3 NRS=100e-3 M=1
 
 .subckt Bod bod_det bod_en
 
 *  Vbod_det     bod_det   0 0V
 
-  Ybod_vhdlams bod_vhdlams vdd vss bod_det bod_en
+  *Ybod_vhdlams bod_vhdlams vdd vss bod_det bod_en
+  Xbod_spice vdd vss bod_det bod_en BOD_BUP
 
 .ends Bod
