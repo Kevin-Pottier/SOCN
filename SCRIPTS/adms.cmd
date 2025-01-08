@@ -12,19 +12,22 @@
 .defmod pmosox3 modpm
 .defmod nmosox3 modnm
 .defmod nwmva modnml
-.param VSUP=5
+.param VSUP=3.3
 
 **************************
 * TESTBENCH
 **************************
-.global vdd vcc vss
+*.global vdd vcc vss
+.global vdd vdda vss vssa
 .param rimp=1
 
-.connect vcc vdd * Mikael uses vcc
+*.connect vcc vdd  *Mikael uses vcc
+.connect vdda vdd
+.connect vssa vss 
 
 .model bod_vhdlams  MACRO LANG=VHDL-AMS LIB=LibBod
 
-vdd           vdd 0 5 PWL (0p 0  1400n 5)
+vdd           vdd 0 VSUP PWL (0p 0  1400n VSUP)
 vss           vss 0 0
 
   **************************
